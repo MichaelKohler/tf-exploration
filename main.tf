@@ -41,10 +41,13 @@ resource "aws_security_group" "tftest" {
   }
 }
 
-resource "aws_volume_attachment" "testebs_attach" {
-  device_name = "/dev/sdh"
-  volume_id   = "${aws_ebs_volume.testebs.id}"
-  instance_id = "${aws_instance.tftest.id}"
+data "aws_ebs_volume" "testebs" {
+  most_recent = true
+
+  filter {
+    name   = "tag:Name"
+    values = ["testtest"]
+  }
 }
 
 resource "aws_instance" "tftest" {
@@ -61,9 +64,11 @@ resource "aws_instance" "tftest" {
   }
 }
 
-resource "aws_ebs_volume" "testebs" {
-  availability_zone = "${var.aws_availability_zone}"
-  size = "${var.ebs_storage_size}"
+resource "aws_volume_attachment" "testebs_attach" {
+  device_name = "/dev/sdh"
+  volume_id   = "${data.aws_ebs_volume.testebs.id}"
+  instance_id = "${aws_instance.tftest.id}"
+  skip_destroy = true
 }
 
 resource "aws_eip" "lb" {
