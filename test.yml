@@ -1,6 +1,0 @@
-- hosts: all
-  gather_facts: yes
-  tasks:
-    - name: Set the hostname
-      become: yes
-      command: hostnamectl set-hostname "tftest"

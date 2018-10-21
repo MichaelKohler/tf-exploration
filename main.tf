@@ -58,10 +58,6 @@ resource "aws_instance" "tftest" {
   tags {
     Name = "tftest"
   }
-
-  provisioner "local-exec" {
-    command = "sleep 120; ansible-playbook -u admin -i '${self.public_ip},' test.yml"
-  }
 }
 
 resource "aws_volume_attachment" "testebs_attach" {
